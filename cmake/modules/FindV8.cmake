@@ -108,42 +108,6 @@ else()
 endif(NOT V8_LIBSAMPLER)
 
 find_library(
-    V8_ICUUC
-    NAMES icuuc
-    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
-    PATH_SUFFIXES lib
-)
-if(NOT V8_ICUUC)
-  message( FATAL_ERROR "Cannot find libary V8_ICUUC" )
-else()
-  message( "-- Found V8_ICUUC: ${V8_ICUUC}" )
-endif(NOT V8_ICUUC)
-
-find_library(
-    V8_ICUI18N
-    NAMES icui18n 
-    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
-    PATH_SUFFIXES lib third_party icu
-)
-if(NOT V8_ICUI18N)
-  message( FATAL_ERROR "Cannot find libary V8_ICUI18N" )
-else()
-  message( "-- Found V8_ICUI18N: ${V8_ICUI18N}" )
-endif(NOT V8_ICUI18N)
-
-find_library(
-    V8_INSPECTOR
-    NAMES inspector 
-    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
-    PATH_SUFFIXES lib src/inspector
-)
-if(NOT V8_INSPECTOR)
-  message( FATAL_ERROR "Cannot find libary V8_INSPECTOR" )
-else()
-  message( "-- Found V8_INSPECTOR: ${V8_INSPECTOR}" )
-endif(NOT V8_INSPECTOR)
-
-find_library(
     V8_COMPILER
     NAMES v8_compiler 
     HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
@@ -154,42 +118,6 @@ if(NOT V8_COMPILER)
 else()
   message( "-- Found V8_COMPILER: ${V8_COMPILER}" )
 endif(NOT V8_COMPILER)
-
-find_library(
-    V8_COMPILER_OPT
-    NAMES v8_compiler_opt 
-    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
-    PATH_SUFFIXES lib
-)
-if(NOT V8_COMPILER_OPT)
-  message( FATAL_ERROR "Cannot find libary V8_COMPILER_OPT" )
-else()
-  message( "-- Found V8_COMPILER_OPT: ${V8_COMPILER_OPT}" )
-endif(NOT V8_COMPILER_OPT)
-
-find_library(
-    V8_NOSNAPSHOT
-    NAMES v8_nosnapshot
-    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
-    PATH_SUFFIXES lib
-)
-if(NOT V8_NOSNAPSHOT)
-  message( FATAL_ERROR "Cannot find libary V8_NOSNAPSHOT" )
-else()
-  message( "-- Found V8_COMPILER_OPT: ${V8_NOSNAPSHOT}" )
-endif(NOT V8_NOSNAPSHOT)
-
-find_library(
-    V8_INIT
-    NAMES v8_init
-    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
-    PATH_SUFFIXES lib
-)
-if(NOT V8_INIT)
-  message( FATAL_ERROR "Cannot find libary V8_INIT" )
-else()
-  message( "-- Found V8_COMPILER_OPT: ${V8_INIT}" )
-endif(NOT V8_INIT)
 
 find_library(
     V8_WEE8
@@ -218,21 +146,18 @@ find_package_handle_standard_args(
 
 mark_as_advanced(  
   V8_INCLUDE_DIR 
-  V8_BASE_WITHOUT_COMPILER 
-  V8_LIBBASE 
-  V8_SNAPSHOT 
+  V8_WEE8
   V8_LIBPLATFORM_LIBRARY 
+  V8_COMPILER
+  V8_BASE_WITHOUT_COMPILER 
+  V8_SNAPSHOT 
   V8_LIBSAMPLER 
-  V8_ICUUC 
-  V8_ICUI18N 
-  V8_INSPECTOR
+  V8_LIBBASE 
 )
 
 IF(UNIX)
   SET(V8_LIBRARIES 
     -pthread
-    ${V8_ICUUC}
-    ${V8_ICUI18N}
     ${V8_WEE8}
     ${V8_LIBPLATFORM_LIBRARY}
     ${V8_COMPILER}
@@ -243,9 +168,6 @@ IF(UNIX)
   )
 ELSE(WIN32)
   SET(V8_LIBRARIES 
-    -pthread
-    ${V8_ICUUC}
-    ${V8_ICUI18N}
     ${V8_WEE8}
     ${V8_LIBPLATFORM_LIBRARY}
     ${V8_COMPILER}
