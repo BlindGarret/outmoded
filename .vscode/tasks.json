@@ -13,6 +13,11 @@
             }
         },
         {
+            "label": "build-release",
+            "type": "shell",
+            "command": "mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make"
+        },
+        {
             "label": "clean",
             "type": "shell",
             "command": "rm -rf build",

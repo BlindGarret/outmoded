@@ -10,12 +10,12 @@
 
 include(FindPackageHandleStandardArgs)
 
-# IF (NOT $ENV{V8_DIR} STREQUAL "")
-#   SET(V8_DIR $ENV{V8_DIR})
-# ENDIF()
+IF (NOT $ENV{V8_DIR} STREQUAL "")
+  SET(V8_DIR $ENV{V8_DIR})
+ENDIF()
 
 # Search Paths
-SET(V8_LIBRARY_SEARCH_PATHS
+SET(V8_LIBBASE_SEARCH_PATHS
   ${V8_DIR}/
   ${V8_DIR}/lib/
   ${V8_DIR}/build/Release/lib/
@@ -38,66 +38,222 @@ SET(V8_LIBRARY_SEARCH_PATHS
   ${V8_DIR}/out.gn/x64.release/lib.target/third_party/icu/
   ${V8_DIR}/out.gn/x64.release/obj/
   ${V8_DIR}/out.gn/x64.release/obj/third_party/icu/
-  ~/Library/Frameworks
-  /Library/Frameworks
-  /usr/local/lib
-  /usr/lib
-  /sw/lib
-  /opt/local/lib
-  /opt/csw/lib
-  /opt/lib
-  /usr/freeware/lib64
 )
 
 # Find Headers
 FIND_PATH(V8_INCLUDE_DIR v8.h
-  ${V8_DIR}
+  ${V8_DIR}/
   ${V8_DIR}/include
-  ~/Library/Frameworks
-  /Library/Frameworks
-  /usr/local/include
-  /usr/include
-  /sw/include
-  /opt/local/include
-  /opt/csw/include
-  /opt/include
-  /usr/freeware/include
-  /devel
 )
 
 # Find Libraries
-# find_library(
-#     V8_LIBRARY 
-#     NAMES libv8_libbase.a v8_libbase.a v8 v8_libbase libv8_libbase
-#     HINTS ${CMAKE_INSTALL_PREFIX}
-#     PATH_SUFFIXES lib
-# )
-
-# FIND_LIBRARY(
-#     V8_LIBPLATFORM_LIBRARY
-#     NAMES v8_libplatform libv8_libplatform
-#     PATHS ${V8_LIBRARY_SEARCH_PATHS}
-# )
-
-FIND_LIBRARY(
-    V8_MONOLITH_LIBRARY
-    NAMES libv8_monolith v8_monolith libv8_monolith.a v8_monolith.a
-    PATHS ${V8_LIBRARY_SEARCH_PATHS}
+find_library(
+  V8_BASE_WITHOUT_COMPILER
+  NAMES v8_base_without_compiler 
+  HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+  PATH_SUFFIXES lib
 )
+if(NOT V8_BASE_WITHOUT_COMPILER)
+  message( FATAL_ERROR "Cannot find libary V8_BASE_WITHOUT_COMPILER" )
+else()
+  message( "-- Found V8_BASE_WITHOUT_COMPILER: ${V8_BASE_WITHOUT_COMPILER}" )
+endif(NOT V8_BASE_WITHOUT_COMPILER)
+
+find_library(
+    V8_LIBBASE 
+    NAMES v8_libbase
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_LIBBASE)
+  message( FATAL_ERROR "Cannot find libary V8_LIBBASE" )
+else()
+  message( "-- Found V8_LIBBASE: ${V8_LIBBASE}" )
+endif(NOT V8_LIBBASE)
+
+find_library(
+    V8_SNAPSHOT
+    NAMES v8_snapshot
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_SNAPSHOT)
+  message( FATAL_ERROR "Cannot find libary V8_SNAPSHOT" )
+else()
+  message( "-- Found V8_SNAPSHOT: ${V8_SNAPSHOT}" )
+endif(NOT V8_SNAPSHOT)
+
+find_library(
+    V8_LIBPLATFORM_LIBRARY
+    NAMES v8_libplatform
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_LIBPLATFORM_LIBRARY)
+  message( FATAL_ERROR "Cannot find libary V8_LIBPLATFORM_LIBRARY" )
+else()
+  message( "-- Found V8_LIBPLATFORM_LIBRARY: ${V8_LIBPLATFORM_LIBRARY}" )
+endif(NOT V8_LIBPLATFORM_LIBRARY)
+
+find_library(
+    V8_LIBSAMPLER
+    NAMES v8_libsampler 
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_LIBSAMPLER)
+  message( FATAL_ERROR "Cannot find libary V8_LIBSAMPLER" )
+else()
+  message( "-- Found V8_LIBSAMPLER: ${V8_LIBSAMPLER}" )
+endif(NOT V8_LIBSAMPLER)
+
+find_library(
+    V8_ICUUC
+    NAMES icuuc
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_ICUUC)
+  message( FATAL_ERROR "Cannot find libary V8_ICUUC" )
+else()
+  message( "-- Found V8_ICUUC: ${V8_ICUUC}" )
+endif(NOT V8_ICUUC)
+
+find_library(
+    V8_ICUI18N
+    NAMES icui18n 
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib third_party icu
+)
+if(NOT V8_ICUI18N)
+  message( FATAL_ERROR "Cannot find libary V8_ICUI18N" )
+else()
+  message( "-- Found V8_ICUI18N: ${V8_ICUI18N}" )
+endif(NOT V8_ICUI18N)
+
+find_library(
+    V8_INSPECTOR
+    NAMES inspector 
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib src/inspector
+)
+if(NOT V8_INSPECTOR)
+  message( FATAL_ERROR "Cannot find libary V8_INSPECTOR" )
+else()
+  message( "-- Found V8_INSPECTOR: ${V8_INSPECTOR}" )
+endif(NOT V8_INSPECTOR)
+
+find_library(
+    V8_COMPILER
+    NAMES v8_compiler 
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_COMPILER)
+  message( FATAL_ERROR "Cannot find libary V8_COMPILER" )
+else()
+  message( "-- Found V8_COMPILER: ${V8_COMPILER}" )
+endif(NOT V8_COMPILER)
+
+find_library(
+    V8_COMPILER_OPT
+    NAMES v8_compiler_opt 
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_COMPILER_OPT)
+  message( FATAL_ERROR "Cannot find libary V8_COMPILER_OPT" )
+else()
+  message( "-- Found V8_COMPILER_OPT: ${V8_COMPILER_OPT}" )
+endif(NOT V8_COMPILER_OPT)
+
+find_library(
+    V8_NOSNAPSHOT
+    NAMES v8_nosnapshot
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_NOSNAPSHOT)
+  message( FATAL_ERROR "Cannot find libary V8_NOSNAPSHOT" )
+else()
+  message( "-- Found V8_COMPILER_OPT: ${V8_NOSNAPSHOT}" )
+endif(NOT V8_NOSNAPSHOT)
+
+find_library(
+    V8_INIT
+    NAMES v8_init
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_INIT)
+  message( FATAL_ERROR "Cannot find libary V8_INIT" )
+else()
+  message( "-- Found V8_COMPILER_OPT: ${V8_INIT}" )
+endif(NOT V8_INIT)
+
+find_library(
+    V8_WEE8
+    NAMES wee8
+    HINTS ${V8_LIBBASE_SEARCH_PATHS} ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+)
+if(NOT V8_WEE8)
+  message( FATAL_ERROR "Cannot find libary V8_WEE8" )
+else()
+  message( "-- Found V8_COMPILER_OPT: ${V8_WEE8}" )
+endif(NOT V8_WEE8)
 
 find_package_handle_standard_args(
   V8  DEFAULT_MSG
-  V8_INCLUDE_DIR V8_MONOLITH_LIBRARY
+  V8_INCLUDE_DIR 
+  V8_BASE_WITHOUT_COMPILER 
+  V8_LIBBASE 
+  V8_SNAPSHOT 
+  V8_LIBPLATFORM_LIBRARY 
+  V8_LIBSAMPLER 
+  V8_ICUUC 
+  V8_ICUI18N 
+  V8_INSPECTOR
 )
 
-mark_as_advanced(
-    V8_INCLUDE_DIR V8_MONOLITH_LIBRARY
+mark_as_advanced(  
+  V8_INCLUDE_DIR 
+  V8_BASE_WITHOUT_COMPILER 
+  V8_LIBBASE 
+  V8_SNAPSHOT 
+  V8_LIBPLATFORM_LIBRARY 
+  V8_LIBSAMPLER 
+  V8_ICUUC 
+  V8_ICUI18N 
+  V8_INSPECTOR
 )
 
 IF(UNIX)
-  SET(V8_LIBRARIES ${V8_MONOLITH_LIBRARY} "pthread")
+  SET(V8_LIBRARIES 
+    -pthread
+    ${V8_ICUUC}
+    ${V8_ICUI18N}
+    ${V8_WEE8}
+    ${V8_LIBPLATFORM_LIBRARY}
+    ${V8_COMPILER}
+    ${V8_BASE_WITHOUT_COMPILER}
+    ${V8_SNAPSHOT}
+    ${V8_LIBSAMPLER}
+    ${V8_LIBBASE}
+  )
 ELSE(WIN32)
-  SET(V8_LIBRARIES ${V8_MONOLITH_LIBRARY})
+  SET(V8_LIBRARIES 
+    -pthread
+    ${V8_ICUUC}
+    ${V8_ICUI18N}
+    ${V8_WEE8}
+    ${V8_LIBPLATFORM_LIBRARY}
+    ${V8_COMPILER}
+    ${V8_BASE_WITHOUT_COMPILER}
+    ${V8_SNAPSHOT}
+    ${V8_LIBSAMPLER}
+    ${V8_LIBBASE}
+  )
 ENDIF(UNIX)
 
 set(V8_INCLUDE_DIRS ${V8_INCLUDE_DIR})
